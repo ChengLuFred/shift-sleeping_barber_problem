@@ -1,32 +1,28 @@
-# SHIFT: Sleeping Barber Problem
+# Solution to Sleeping Barber Problem
 
-*Please use only the C++ standard library in your solution\*, and make sure to provide compiling instructions if no build system is provided. You can use any combination of tools and operating systems to solve this problem, but it should be compilable on a standard Linux installation (i.e. with GCC). Additionally, your solution should make use of objected-oriented programming concepts.*
+*This soulution is build in Visual Studio 2017 in Windows, which includes three files that one header file and two cpp files.*
 
-*Please make sure to also add sufficient comments to your code. Defining "sufficient" is up to you.*
+## Solution Description
 
-*\* E.g. you should use "std::thread" instead of POSIX threads (a.k.a. "pthreads").*
+I create two classes, one is Barber, the other is Customer, each one simulates its object. I use three locks here to prevent the resource race, one for controlling barbar's sleeping, one for controlling how many customer sit in the waiting room and another for printing the states of barber, customer and waiting room. Although less lock is good to avoid deadlock, I think three locks is needed here.
 
-## Problem Description
-
-This problem is about simulating a barber shop with the following characteristics. The barber shop has a waiting room with *M* seats and a separate room with a single barber chair where the barber works. If there are no waiting customers, nor a customer having a haircut, the barber takes a break and sleeps. The moment a customer arrives, s/he wakes the barber up so that they can have their haircut. If another customer arrives while the barber is working, s/he will either sit in the waiting room (if there are available seats) or leave (if no seats are available).
+Another thing I want to explain is that the important things about customer is its ID ,waiting order and whether he comes or not in this problem. In other words, I just want to know three things about customers that listing above, if I were the barber. So, when the customer thread pass this three parameter to the barber it was done.
 
 ## Implementation Details
 
-The only (command line) input for your program will be the number *M* of seats in the waiting room. The barber needs to be implemented as a thread which runs indefinitely, always performing one of the 3 possible tasks: sleeping, waking up and working. The barber sleeps if there are no awaiting customers.
+Please input the number of waiting chairs at first.
 
-There must be a thread which is responsible for creating new threads from time to time to simulate new customers arriving in the barber shop. This thread should run an infinite loop creating new threads every 3 seconds. Each created thread need to receive an integer parameter (sequentially incremented) which will serve as the customer ID.
+The time of cutting hair and new customer generating is set according to the requirement, where cutting hair needs [1:5] seconds and new customer arrives every 3 seconds. But you can find and change them in "barbershop.cpp" at line 41 and line 109.
 
-In the beginning of the program, the barber is sleeping and there are no customers in the shop. When a customer arrives, s/he wakes the barber up so that they can have their haircut. The haircut is to be simulated with a thread sleep of *N* seconds, where *N* is a random number between 1 and 5, inclusive (i.e. [1,5]). If a new customer (thread) arrives while the barber is busy, they should wait in one of the seats of the waiting room, if one is available, or leave if none is available. Leaving is simulated by simply terminating the execution of the thread.
+## Output
 
-## Expected Output
-
-The program must output the following given the current status of the program:
+The first customer will arrive 3 seconds later at first. And note that please be patient, it may take 2 to 3 minutes to see all three cases listing below.
 
 ---
 
 **Case 1**
 
-There are no customers having a haircut and the barber is sleeping while waiting for customers. 
+No customer arrives and barber is sleeping at first. 
 
 ```
 Barber sleeping
@@ -37,31 +33,28 @@ Waiting room:
 
 **Case 2**
 
-The barber is cutting the hair of customer 12 and customers 13 to 16 are waiting.
+The barber is cutting the hair of customer 20 and customers 21, 22, 23, 24 are waiting.
 
 ```
-Barber cutting the hair of customer 12
-Waiting room: 13 14 15 16
+Barber cutting the hair of customer 20
+Waiting room : 21  22  23  24
 ```
 
 ---
 
 **Case 3**
 
-The barber is cutting the hair of customer 12 and customers 15, 16, 17, 19 and 21 are waiting (assuming there are only 5 seats in the waiting room) when customer 22 arrives and ends up leaving because there are no available seats.
+The barber is cutting the hair of customer 23 and customers 24 to 28 are waiting, but customer 29 leaving with no avaliable seats in waiting room.
 
 ```
-Barber cutting the hair of customer 12
-Waiting room: 15 16 17 19 21
-Customer 22 leaving
+Barber cutting the hair of customer 23
+Waiting room : 24  25  26  27  28
+Customer 29 leaving
 ```
-
-*Note: given the behavior of the program, customers 13, 14, 18 and 20 must have arrived when no seats were available.*
 
 ---
+## The Next
 
-The customer number is the argument given when creating the thread, as explained above.
+I am working on implementing a base class called "Barbershop", and "Barber" and "Customer" become its derived class. So they may share information in the base class instead of setting global variables.
 
-> If you have any specific questions, please contact me at twinkle1@stevens.edu.
-
-> Good luck!
+> If you have any specific questions, please contact me at clu12@stevens.edu.
